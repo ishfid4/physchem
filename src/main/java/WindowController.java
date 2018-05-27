@@ -30,9 +30,9 @@ public class WindowController {
     @FXML
     AnchorPane rightAnchorPane;
     private Data data;
-    ArrayList<TextField> startTempLabelList = new ArrayList<>();
-    ArrayList<TextField> endTempLabelList = new ArrayList<>();
-    ArrayList<TextField> extraHeatLabelList = new ArrayList<>();
+    ArrayList<TextField> startTempLabelList;
+    ArrayList<TextField> endTempLabelList;
+    ArrayList<TextField> extraHeatLabelList;
 
     @FXML public void initialize() throws FileNotFoundException {
         File file = new File(Main.class.getResource("Specific_Heat.txt").getFile());
@@ -41,29 +41,35 @@ public class WindowController {
 
 
     @FXML public void setCountOfTransitions() {
+        System.out.println(startTempLabelList.size());
         if (!countField.getText().isEmpty()) {
             int countOfNeededFields = Integer.parseInt(countField.getText());
+            // Init/Clear lists
+            startTempLabelList = new ArrayList<>();
+            endTempLabelList = new ArrayList<>();
+            extraHeatLabelList = new ArrayList<>();
+            // Populate UI
             for (int i = 0; i < countOfNeededFields; i++) {
-                final int dupa = i;
+                final int index = i;
                 Platform.runLater(() -> {
                     startTempLabelList.add(new TextField());
-                    startTempLabelList.get(dupa).setMaxWidth(100);
-                    startTempLabelList.get(dupa).setLayoutX(15);
-                    startTempLabelList.get(dupa).setLayoutY(dupa*30 + 40);
+                    startTempLabelList.get(index).setMaxWidth(100);
+                    startTempLabelList.get(index).setLayoutX(15);
+                    startTempLabelList.get(index).setLayoutY(index*30 + 40);
 
                     endTempLabelList.add(new TextField());
-                    endTempLabelList.get(dupa).setMaxWidth(100);
-                    endTempLabelList.get(dupa).setLayoutX(115);
-                    endTempLabelList.get(dupa).setLayoutY(dupa*30 + 40);
+                    endTempLabelList.get(index).setMaxWidth(100);
+                    endTempLabelList.get(index).setLayoutX(115);
+                    endTempLabelList.get(index).setLayoutY(index*30 + 40);
 
                     extraHeatLabelList.add(new TextField());
-                    extraHeatLabelList.get(dupa).setMaxWidth(100);
-                    extraHeatLabelList.get(dupa).setLayoutX(215);
-                    extraHeatLabelList.get(dupa).setLayoutY(dupa*30 + 40);
+                    extraHeatLabelList.get(index).setMaxWidth(100);
+                    extraHeatLabelList.get(index).setLayoutX(215);
+                    extraHeatLabelList.get(index).setLayoutY(index*30 + 40);
 
-                    rightAnchorPane.getChildren().add(startTempLabelList.get(dupa));
-                    rightAnchorPane.getChildren().add(endTempLabelList.get(dupa));
-                    rightAnchorPane.getChildren().add(extraHeatLabelList.get(dupa));
+                    rightAnchorPane.getChildren().add(startTempLabelList.get(index));
+                    rightAnchorPane.getChildren().add(endTempLabelList.get(index));
+                    rightAnchorPane.getChildren().add(extraHeatLabelList.get(index));
                 });
             }
         }
@@ -87,8 +93,8 @@ public class WindowController {
         VBox box = new VBox();
         box.setPadding(new Insets(10));
 
-        LineChart specificHeatChart = createLineChart("Specific Heat", "Y", "X", data.getSpecificHeat());
-        box.getChildren().add(specificHeatChart);
+//        LineChart specificHeatChart = createLineChart("Specific Heat", "Y", "X", data.getSpecificHeat());
+//        box.getChildren().add(specificHeatChart);
 
         LineChart entalphyChart = createLineChart("Entalphy", "Y", "X", data.getEnthalpy());
         box.getChildren().add(entalphyChart);
