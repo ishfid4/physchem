@@ -17,7 +17,20 @@ public class Data {
         Scanner scanner = new Scanner(inputFile);
 
         while(scanner.hasNext()){ //TODO: should check if it has two in row
-            specificHeat.add(new Pair<>(Double.parseDouble(scanner.next()), Double.parseDouble(scanner.next())));
+            Double nextTemp = Double.parseDouble(scanner.next());
+            Double nextCp = Double.parseDouble(scanner.next());
+            if (!specificHeat.isEmpty()){
+                Pair<Double, Double> startPair = specificHeat.get(specificHeat.size() - 1);
+                Double distanceBeteewnTemp = nextTemp - startPair.getKey();
+                Double specificHeatDelta = nextCp - startPair.getValue();
+                for (Integer i = startPair.getKey().intValue() + 1; i < nextTemp; i++) {
+                    Pair<Double, Double> previousPair = specificHeat.get(specificHeat.size() - 1);
+                    Double calculatedSpecificHeat = previousPair.getValue() + (specificHeatDelta / distanceBeteewnTemp);
+                    specificHeat.add(new Pair<>(i.doubleValue(),calculatedSpecificHeat));
+//                  Take previous and current value, calculate delta, then distribute it evenly on bewtween previous and current temperature
+                }
+            }
+            specificHeat.add(new Pair<>(nextTemp, nextCp));
         }
         scanner.close();
     }
