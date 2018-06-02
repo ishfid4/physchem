@@ -1,23 +1,16 @@
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.knowm.xchart.QuickChart;
-import org.knowm.xchart.SwingWrapper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,23 +22,33 @@ public class WindowController {
     TextField countField;
     @FXML
     AnchorPane rightAnchorPane;
+    private boolean entalphyCalculated = false;
     private Data data;
     ArrayList<TextField> startTempLabelList = new ArrayList<>();
     ArrayList<TextField> endTempLabelList = new ArrayList<>();
     ArrayList<TextField> extraHeatLabelList = new ArrayList<>();
+    ArrayList<ChoiceBox> choiceBoxes = new ArrayList<>();
 
     @FXML public void initialize() throws FileNotFoundException {
+        initData();
+    }
+
+    private void initData() throws FileNotFoundException {
         File file = new File(Main.class.getResource("Specific_Heat.txt").getFile());
         data = new Data(file);
     }
 
-
-    @FXML public void setCountOfTransitions() {
+    @FXML public void setCountOfTransitions() throws FileNotFoundException {
         if (!countField.getText().isEmpty()) {
+            if (entalphyCalculated) {
+                initData();
+                entalphyCalculated = false;
+            }
             int countOfNeededFields = Integer.parseInt(countField.getText());
             startTempLabelList = new ArrayList<>();
             endTempLabelList = new ArrayList<>();
             extraHeatLabelList = new ArrayList<>();
+            choiceBoxes = new ArrayList<>();
             for (int i = 0; i < countOfNeededFields; i++) {
                 final int index = i;
                 Platform.runLater(() -> {
@@ -64,22 +67,45 @@ public class WindowController {
                     extraHeatLabelList.get(index).setLayoutX(215);
                     extraHeatLabelList.get(index).setLayoutY(index*30 + 40);
 
+                    choiceBoxes.add(new ChoiceBox(FXCollections.observableArrayList(
+                            "Sigmoid", "Sin", "Cos","Fun1", "Fun2")));
+                    choiceBoxes.get(index).setMaxWidth(100);
+                    choiceBoxes.get(index).setLayoutX(315);
+                    choiceBoxes.get(index).setLayoutY(index*30 + 40);
+
                     rightAnchorPane.getChildren().add(startTempLabelList.get(index));
                     rightAnchorPane.getChildren().add(endTempLabelList.get(index));
                     rightAnchorPane.getChildren().add(extraHeatLabelList.get(index));
+                    rightAnchorPane.getChildren().add(choiceBoxes.get(index));
                 });
             }
         }
     }
 
     @FXML public void saveToFile() throws FileNotFoundException, UnsupportedEncodingException {
-        data.calculateEntalphy();
+        if (!entalphyCalculated) {
+            data.calculateEntalphy();
+            entalphyCalculated = true;
+        }
+        for (int i = 0; i < Integer.parseInt(countField.getText()); i++) {
+            data.addEntalphyOfTrans(Double.parseDouble(startTempLabelList.get(i).getText())
+                    ,Double.parseDouble(endTempLabelList.get(i).getText())
+                    ,Double.parseDouble(extraHeatLabelList.get(i).getText()), choiceBoxes.get(i).valueProperty());
+        }
         data.saveEntalphyToFile();
     }
 
     @FXML public void showCalculatedCharts()
     {
-        data.calculateEntalphy();
+        if (!entalphyCalculated) {
+            data.calculateEntalphy();
+            entalphyCalculated = true;
+        }
+        for (int i = 0; i < Integer.parseInt(countField.getText()); i++) {
+            data.addEntalphyOfTrans(Double.parseDouble(startTempLabelList.get(i).getText())
+                    ,Double.parseDouble(endTempLabelList.get(i).getText())
+                    ,Double.parseDouble(extraHeatLabelList.get(i).getText()), choiceBoxes.get(i).valueProperty());
+        }
         showCharts();
     }
 
@@ -90,10 +116,10 @@ public class WindowController {
         VBox box = new VBox();
         box.setPadding(new Insets(10));
 
-        LineChart specificHeatChart = createLineChart("Specific Heat", "Y", "X", data.getSpecificHeat());
+        LineChart specificHeatChart = createLineChart("Specific Heat", "Specific heat [J/(g*C)]", "Temp [deg. C]", data.getSpecificHeat());
         box.getChildren().add(specificHeatChart);
 
-        LineChart entalphyChart = createLineChart("Entalphy", "Y", "X", data.getEnthalpy());
+        LineChart entalphyChart = createLineChart("Entalphy", "Enthalpy [J/g]", "Temp [deg. C]", data.getEnthalpy());
         box.getChildren().add(entalphyChart);
 
         Scene scene = new Scene(box, 450, 350);
