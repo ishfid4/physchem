@@ -10,8 +10,8 @@
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
-            <Button fx:id="setCountButton" layoutX="37.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#setCountOfTransitions" prefHeight="26.0" prefWidth="100.0" text="Set cunt" />
-            <Label layoutX="37.0" layoutY="14.0" text="Count of XXXXX" />
+            <Button fx:id="setCountButton" layoutX="37.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#setCountOfTransitions" prefHeight="26.0" prefWidth="100.0" text="Set count" />
+            <Label layoutX="37.0" layoutY="14.0" text="Count of extra enthalpy" />
             <TextField fx:id="countField" layoutX="37.0" layoutY="30.0" prefHeight="26.0" prefWidth="100.0" />
             <Button fx:id="saveToFileButton" layoutX="39.0" layoutY="324.0" mnemonicParsing="false" onMouseClicked="#saveToFile" prefHeight="26.0" prefWidth="100.0" text="Save to file" />
             <Button fx:id="showChartsButton" layoutX="38.0" layoutY="358.0" mnemonicParsing="false" onMouseClicked="#showCalculatedCharts" prefHeight="26.0" prefWidth="100.0" text="Show charts" />
@@ -20,7 +20,7 @@
          <children>
             <Label fx:id="startTempLabel" layoutX="14.0" layoutY="14.0" prefHeight="16.0" prefWidth="100.0" text="Start temp" />
             <Label fx:id="endTempLabel" layoutX="114.0" layoutY="14.0" prefHeight="16.0" prefWidth="100.0" text="End temp" />
-            <Label fx:id="extraHeatLabel" layoutX="220.0" layoutY="14.0" prefHeight="16.0" prefWidth="100.0" text="Extra Heat" />
+            <Label fx:id="extraHeatLabel" layoutX="220.0" layoutY="14.0" prefHeight="16.0" prefWidth="100.0" text="Extra Enthalpy" />
             <Label fx:id="functionTypeLabel" layoutX="320.0" layoutY="14.0" prefHeight="16.0" prefWidth="150.0" text="Type of function" />
          </children></AnchorPane>
   </items>
