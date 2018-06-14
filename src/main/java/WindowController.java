@@ -101,10 +101,12 @@ public class WindowController {
             data.calculateEntalphy();
             entalphyCalculated = true;
         }
-        for (int i = 0; i < Integer.parseInt(countField.getText()); i++) {
-            data.addEntalphyOfTrans(Double.parseDouble(startTempLabelList.get(i).getText())
-                    ,Double.parseDouble(endTempLabelList.get(i).getText())
-                    ,Double.parseDouble(extraHeatLabelList.get(i).getText()), choiceBoxes.get(i).valueProperty());
+        if (!countField.getText().equals("")) {
+            for (int i = 0; i < Integer.parseInt(countField.getText()); i++) {
+                data.addEntalphyOfTrans(Double.parseDouble(startTempLabelList.get(i).getText())
+                        , Double.parseDouble(endTempLabelList.get(i).getText())
+                        , Double.parseDouble(extraHeatLabelList.get(i).getText()), choiceBoxes.get(i).valueProperty());
+            }
         }
         showCharts();
     }
